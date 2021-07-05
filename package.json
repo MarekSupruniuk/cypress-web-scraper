@@ -1,0 +1,12 @@
+{
+  "name": "cypress-web-scraper",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:MarekSupruniuk/cypress-web-scraper.git",
+  "author": "Marek Supruniuk <marek.supruniuk@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^7.6.0",
+    "typescript": "^4.3.5"
+  }
+}
