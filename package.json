@@ -8,5 +8,8 @@
   "devDependencies": {
     "cypress": "^7.6.0",
     "typescript": "^4.3.5"
+  },
+  "scripts": {
+    "start": "cypress open"
   }
 }
