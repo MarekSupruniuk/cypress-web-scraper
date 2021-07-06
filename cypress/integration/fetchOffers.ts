@@ -1,4 +1,17 @@
-const readOfferRow = (row: JQuery<HTMLElement>) => {
+import { parse } from 'json2csv';
+
+const fields = ['id', 'name', 'phoneNumber', 'sourceUrl', 'area', 'type'];
+
+type OfferRecord = {
+  id: number;
+  name: string;
+  phoneNumber: string;
+  sourceUrl: string;
+  area: string;
+  type: string;
+};
+
+const readOfferRow = (row: JQuery<HTMLElement>): OfferRecord => {
   const id = row.data("id");
   const name = row.find("p.title > strong").text();
   const sourceUrl = row.find(".sourceButton").attr("href");
@@ -22,7 +35,7 @@ const readOfferRow = (row: JQuery<HTMLElement>) => {
   };
 };
 
-const readPagesCount = (element: HTMLElement) =>
+const readPagesCount = (element: HTMLElement): number =>
   parseInt(element.textContent.split("/")[1].trim(), 10);
 
 describe("Read data", () => {
@@ -42,10 +55,10 @@ describe("Read data", () => {
     cy.get("#datapickerGlass").click({ force: true });
 
     // Fill up filter fields & search
-    cy.get("#city").type("białostocki");
+    cy.get("#city").type(Cypress.env("cityValue"));
     cy.get(".ac_results.city ul li:first-of-type").click();
 
-    cy.get("#object").select(["Mieszkanie", "Komercyjny"], { force: true });
+    cy.get("#object").select(Cypress.env("objectValue").split(","), { force: true });
 
     cy.get('button[type="submit"]').contains("Wyszukaj").click();
 
@@ -54,7 +67,7 @@ describe("Read data", () => {
       // Get total pages count
       const pagesCount = readPagesCount(element[0]);
 
-      const processPage = (page: number, data: any[]) => {
+      const processPage = (page: number, data: OfferRecord[]) => {
         // Set page
         cy.get('input[data-link="paginator"]')
           .clear()
@@ -73,8 +86,12 @@ describe("Read data", () => {
             if (page < pagesCount) {
               processPage(page + 1, data);
             } else {
-              console.log(data.length);
-              console.log(data);
+              try {
+                const csv = parse(data, { fields });                
+                cy.writeFile(Cypress.env("filename"), csv);
+              } catch (err) {
+                console.error(err);
+              }
             }
           });
       };

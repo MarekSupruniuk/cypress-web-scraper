@@ -11,5 +11,8 @@
   },
   "scripts": {
     "start": "cypress open"
+  },
+  "dependencies": {
+    "json2csv": "^5.0.6"
   }
 }
