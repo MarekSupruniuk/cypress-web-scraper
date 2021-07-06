@@ -7,8 +7,13 @@
 2. set env variables
 3. install deps - `yarn install`
 
-# How to run
+# How to use
+To run headless script:
+1. run `yarn fetch`
+2. script executes and creates CSV file
+
+To run UI version:
 1. run `yarn start`
-2. select `fetchOffers.ts` from *Integration* Test section
+2. select `fetchOffers.ts` from *Integration Test* section
 3. script executes and creates CSV file
 4. close project *ctrl+c*

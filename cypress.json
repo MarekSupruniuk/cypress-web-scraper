@@ -1,1 +1,6 @@
-{}
+{
+  "video": false,
+  "fixturesFolder": false,
+  "pluginsFile": false,
+  "supportFile": false
+}

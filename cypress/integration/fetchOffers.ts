@@ -38,6 +38,15 @@ const readOfferRow = (row: JQuery<HTMLElement>): OfferRecord => {
 const readPagesCount = (element: HTMLElement): number =>
   parseInt(element.textContent.split("/")[1].trim(), 10);
 
+const writeToFile = (data: OfferRecord[]) => {
+  try {
+    const csv = parse(data, { fields });
+    cy.writeFile(Cypress.env("filename"), csv);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 describe("Read data", () => {
   it("Just read", () => {
     cy.visit(Cypress.env("host"));
@@ -78,6 +87,7 @@ describe("Read data", () => {
         // Wait for record list to be refreshed
         cy.wait(2000);
 
+        // Display phone numbers for each row
         cy.get(".row.offer.hidden-xs .phone-contact:not(.showed-phone)").click({
           force: true,
           multiple: true,
@@ -93,12 +103,7 @@ describe("Read data", () => {
             if (page < pagesCount) {
               processPage(page + 1, data);
             } else {
-              try {
-                const csv = parse(data, { fields });
-                cy.writeFile(Cypress.env("filename"), csv);
-              } catch (err) {
-                console.error(err);
-              }
+              writeToFile(data);
             }
           });
       };
