@@ -1,6 +1,6 @@
-import { parse } from 'json2csv';
+import { parse } from "json2csv";
 
-const fields = ['id', 'name', 'phoneNumber', 'sourceUrl', 'area', 'type'];
+const fields = ["id", "name", "phoneNumber", "sourceUrl", "area", "type"];
 
 type OfferRecord = {
   id: number;
@@ -23,7 +23,7 @@ const readOfferRow = (row: JQuery<HTMLElement>): OfferRecord => {
     .find("div:nth-child(1) > .row > div > small:nth-of-type(2)")
     .text()
     .trim();
-  const phoneNumber = "no phone";
+  const phoneNumber = row.find(".showed-phone em:nth-of-type(1)").text().trim();
 
   return {
     id,
@@ -58,7 +58,9 @@ describe("Read data", () => {
     cy.get("#city").type(Cypress.env("cityValue"));
     cy.get(".ac_results.city ul li:first-of-type").click();
 
-    cy.get("#object").select(Cypress.env("objectValue").split(","), { force: true });
+    cy.get("#object").select(Cypress.env("objectValue").split(","), {
+      force: true,
+    });
 
     cy.get('button[type="submit"]').contains("Wyszukaj").click();
 
@@ -76,6 +78,11 @@ describe("Read data", () => {
         // Wait for record list to be refreshed
         cy.wait(2000);
 
+        cy.get(".row.offer.hidden-xs .phone-contact:not(.showed-phone)").click({
+          force: true,
+          multiple: true,
+        });
+
         // Read rows data
         cy.get(".row.offer.hidden-xs")
           .each((row) => {
@@ -87,7 +94,7 @@ describe("Read data", () => {
               processPage(page + 1, data);
             } else {
               try {
-                const csv = parse(data, { fields });                
+                const csv = parse(data, { fields });
                 cy.writeFile(Cypress.env("filename"), csv);
               } catch (err) {
                 console.error(err);
