@@ -23,7 +23,8 @@ const readOfferRow = (row: JQuery<HTMLElement>): OfferRecord => {
     .find("div:nth-child(1) > .row > div > small:nth-of-type(2)")
     .text()
     .trim();
-  const phoneNumber = row.find(".showed-phone em:nth-of-type(1)").text().trim();
+  // const phoneNumber = row.find(".showed-phone em:nth-of-type(1)").text().trim();
+  const phoneNumber = '-- empty --';
 
   return {
     id,
@@ -71,6 +72,14 @@ describe("Read data", () => {
       force: true,
     });
 
+    cy.get("#action").select(Cypress.env("actionValue").split(","), {
+      force: true,
+    });
+
+    cy.get("#date").select(Cypress.env("dateValue"), {
+      force: true,
+    });
+
     cy.get('button[type="submit"]').contains("Wyszukaj").click();
 
     // Read pages count
@@ -88,10 +97,10 @@ describe("Read data", () => {
         cy.wait(2000);
 
         // Display phone numbers for each row
-        cy.get(".row.offer.hidden-xs .phone-contact:not(.showed-phone)").click({
-          force: true,
-          multiple: true,
-        });
+        // cy.get(".row.offer.hidden-xs .phone-contact:not(.showed-phone)").click({
+        //   force: true,
+        //   multiple: true,
+        // });
 
         // Read rows data
         cy.get(".row.offer.hidden-xs")
